@@ -1,0 +1,70 @@
+function nextPt = nextPt(C,I,wSize,edges,epsilon)
+
+    w = wSize - 2;
+    [~,p] = size(C.x);
+    
+    reject(1:4) = 1;
+    
+    C.x(p)
+    C.y(p)
+    
+    candidate = struct('x',[],'y',[]);
+    c = struct('x',[],'y',[]);
+    
+    candidate(1).x = C.x(p) + 1;
+    candidate(1).y = C.y(p);
+      
+    candidate(2).x = C.x(p) - 1;
+    candidate(2).y = C.y(p);
+    
+    candidate(3).x = C.x(p);
+    candidate(3).y = C.y(p) + 1;
+    
+    candidate(4).x = C.x(p);
+    candidate(4).y = C.y(p) - 1;
+    
+    for i = 1:4
+        isEdge(i) = ~checkForEdge(candidate(i).x,candidate(i).y,edges,epsilon);
+    end
+    
+    for i = 1:4        
+        if(isEdge(i))
+            c(1).x = candidate(i).x + 1;
+            c(1).y = candidate(i).y;
+            
+            c(2).x = candidate(i).x - 1;
+            c(2).y = candidate(i).y;
+            
+            c(3).x = candidate(i).x;
+            c(3).y = candidate(i).y + 1;
+            
+            c(4).x = candidate(i).x;
+            c(4).y = candidate(i).y - 1;
+            
+            for j = 1:4
+                e(j) = ~checkForEdge(c(j).x,c(j).y,edges,epsilon);
+            end
+
+            if (e(1)==1 && e(2)==1 && e(3)==1 && e(4)==1) || (e(1)==0 && e(2)==0 && e(3)==0 && e(4)==0)
+                reject(i) = 1;
+            else
+                reject(i) = 0;
+            end
+
+            %for k = 1:p
+            %   if candidate(i).x == C.x(k) && candidate(i).y == C.y(k)
+            %       reject(i) = 1;
+            %   end
+            %end
+        end    
+    end
+    
+    for i = 1:4
+        if (~reject(i))
+           next = [candidate(i).x, candidate(i).y]; 
+        end
+    end
+    
+    nextPt = next
+end
+

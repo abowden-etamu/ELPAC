@@ -1,0 +1,81 @@
+function nextPt = nextPt(C,I,wSize,edges,epsilon)
+
+    w = wSize - 2;
+    [~,p] = size(C.x);
+    edgeGrid = zeros(wSize,wSize);
+               
+    for m = wSize:-1:1
+        for n = wSize:-1:1
+            if(p>ceil(wSize/2))
+                if( (C.x(p) + (m-w) == C.x(1)) && (C.y(p) + (n-w) == C.y(1)) )
+                    nextPt = [C.x(1),C.y(1)];
+                    return;
+                end
+            end
+            
+            edgeGrid(m,n) = ~checkForEdge(C.x(p) + (m-w),C.y(p) + (n-w),edges,epsilon);          
+        end
+    end
+    
+    %for m = 5:-1:1
+    %   for n = 5:-1:1
+    %       if(edgeGrid(m,n))
+    %            y_2 = C.y(p);
+    %            y_1 = C.y(p-1);
+    %            x_2 = C.x(p);
+    %            x_1 = C.x(p-1);
+
+    %            x = C.x(p) + (m-3);
+    %            y = C.y(p) + (n-3);
+
+    %            edgeGrid(m,n) = (-x*(y_2 - y_1) + y*(x_2 - x_1) + x_2*(y_2 - y_1) - y_2*(x_2 - x_1));
+    %       end
+    %    end 
+    %end
+    
+    %l = zeros(1,3);
+    %distGridPrev = 0;
+    %distGridCurr = 0;
+    
+    %for m = wSize:-1:1
+    %    for n = wSize:-1:1
+    %        if(edgeGrid(m,n))
+    %            distGridPrev = abs(C.x(p) - (C.x(p) + (m-w)) ) + abs(C.y(p) - (C.y(p) + (n-w)) );
+                
+    %            if(p>1) 
+    %                distGridCurr = abs(C.x(p-1) - (C.x(p) + (m-w)) ) + abs(C.y(p-1) - (C.y(p) + (n-w)) );
+    %            end
+                
+    %            if(distGridPrev + distGridCurr > l(1,1))
+    %                l(1,1) = distGridPrev + distGridCurr;
+    %                l(1,2) = m;
+    %                l(1,3) = n;
+    %            end
+    %        end
+    %    end
+    %end
+    
+    %if(edgeGrid(1,3) == 1)
+    %    Pt = [C.x(p) - 1,C.y(p) + 1];    
+    %elseif(edgeGrid(1,1) == 1)
+    %    Pt = [C.x(p) - 1,C.y(p) - 1];
+    %elseif(edgeGrid(1,2) == 1)
+    %    Pt = [C.x(p) - 1,C.y(p)];
+    %elseif(edgeGrid(1,1) == 1)
+    %    Pt = [C.x(p) - 1,C.y(p) - 1];    
+    %end
+    
+   if(edgeGrid(1,1) == 1)
+       Pt = [C.x(p) - 1,C.y(p) - 1];
+   elseif(edgeGrid(1,2) == 1)
+       Pt = [C.x(p) - 1,C.y(p)];
+   elseif(edgeGrid(1,3) == 1)
+       Pt = [C.x(p) - 1,C.y(p) + 1];
+   elseif(edgeGrid(2,3) == 1)
+       Pt = [C.x(p),C.y(p) + 1];
+   end
+    
+    nextPt = Pt;
+    %nextPt = [C.x(p) + (l(1,2)-w),C.y(p) + (l(1,3)-w)];
+end
+
